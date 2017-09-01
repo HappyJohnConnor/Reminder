@@ -37,7 +37,7 @@ public class MainFragment extends Fragment {
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
 
         //select
-        Cursor cursor = db.rawQuery("select * from reminder_record", null);
+        final Cursor cursor = db.rawQuery("select * from reminder_record", null);
 
         //adapter
         String[] from = {"title", "body"};
@@ -45,11 +45,18 @@ public class MainFragment extends Fragment {
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_item, cursor, from, to, 0);
         listView.setAdapter(adapter);
 
+        // TODO: 2017/08/31 fragmentに情報を受け渡す。
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String body= cursor.getString(cursor.getColumnIndex("body"));
+
                 DetailFragment fragment = new DetailFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                Bundle bundle=new Bundle();
+                bundle.putString("title", cursor.getString(cursor.getColumnIndex("title")));
+                bundle.putString("body", cursor.getString(cursor.getColumnIndex("body")));
+                fragment.setArguments(bundle);
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_fragment, fragment);
                 transaction.addToBackStack(null);
