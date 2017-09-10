@@ -1,7 +1,6 @@
 package com.example.author.reminder3v;
 
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -53,11 +52,13 @@ public class DetailFragment extends Fragment {
     }
 
 
+
+
     private void saveData() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MyDBHelper.COLUMN_TITLE, title_edit.getText().toString());
         contentValues.put(MyDBHelper.COLUMN_BODY, body_edit.getText().toString());
-        Uri uri = getActivity().getContentResolver().insert(MyContentProvider.CONTENT_URI, contentValues);
+        getActivity().getContentResolver().insert(MyContentProvider.CONTENT_URI, contentValues);
     }
 
 

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.author.reminder3v.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/delete"
+        android:actionLayout="@android:drawable/ic_menu_delete"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>
