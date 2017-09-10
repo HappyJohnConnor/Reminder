@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +39,8 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 DetailFragment fragment = new DetailFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                Bundle bundle = new Bundle();
+                fragment.setArguments(bundle);
                 transaction.addToBackStack(null).
                         replace(R.id.main_fragment, fragment)
                         .commit();
@@ -64,13 +65,12 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DetailFragment fragment = new DetailFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 Bundle bundle = new Bundle();
                 bundle.putString("title", cursor.getString(cursor.getColumnIndex("title")));
                 bundle.putString("body", cursor.getString(cursor.getColumnIndex("body")));
                 bundle.putString("id", cursor.getString(cursor.getColumnIndex("_id")));
                 fragment.setArguments(bundle);
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.main_fragment, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();

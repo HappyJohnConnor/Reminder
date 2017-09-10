@@ -29,9 +29,12 @@ public class MyContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", REMINDER_RECORD_ID);
     }
 
+    private SQLiteDatabase mDatabase;
+
     @Override
     public boolean onCreate() {
         mDBHelper = new MyDBHelper(getContext());
+        mDatabase = mDBHelper.getWritableDatabase();
         return false;
     }
 
@@ -42,22 +45,23 @@ public class MyContentProvider extends ContentProvider {
 
         queryBuilder.setTables(MyDBHelper.TABLE_RECORD);
 
-        int uriType= uriMatcher.match(uri);
-        switch (uriType){
+        int uriType = uriMatcher.match(uri);
+        switch (uriType) {
             case REMINDER_RECORD:
                 break;
             case REMINDER_RECORD_ID:
-                queryBuilder.appendWhere(MyDBHelper.COLUMN_ID+"="+uri.getLastPathSegment());
+                queryBuilder.appendWhere(MyDBHelper.COLUMN_ID + "=" + uri.getLastPathSegment());
                 break;
             default:
-                throw new IllegalArgumentException("Unknown URI: "+uri);
+                throw new IllegalArgumentException("Unknown URI: " + uri);
         }
 
-        SQLiteDatabase db=mDBHelper.getWritableDatabase();
-        Cursor cursor=queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
         return cursor;
     }
+
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
@@ -67,15 +71,15 @@ public class MyContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        int uriType=uriMatcher.match(uri);
-        SQLiteDatabase sqlDB=mDBHelper.getWritableDatabase();
-        long id=0;
-        switch(uriType){
+        int uriType = uriMatcher.match(uri);
+        SQLiteDatabase sqlDB = mDBHelper.getWritableDatabase();
+        long id = 0;
+        switch (uriType) {
             case REMINDER_RECORD:
-                id=sqlDB.insert(MyDBHelper.TABLE_RECORD, null, values);
+                id = sqlDB.insert(MyDBHelper.TABLE_RECORD, null, values);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown URI: "+uri);
+                throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
 
@@ -84,8 +88,13 @@ public class MyContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-
-        return 0;
+        int match = uriMatcher.match(uri);
+        switch (match) {
+            case REMINDER_RECORD_ID:
+                return mDatabase.delete(MyDBHelper.TABLE_RECORD, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("invalid uri: " + uri);
+        }
     }
 
     @Override

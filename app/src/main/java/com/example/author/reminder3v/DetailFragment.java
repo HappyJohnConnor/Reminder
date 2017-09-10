@@ -1,7 +1,9 @@
 package com.example.author.reminder3v;
 
 import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import static android.net.Uri.withAppendedPath;
 
 
 public class DetailFragment extends Fragment {
@@ -25,6 +29,12 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -33,10 +43,10 @@ public class DetailFragment extends Fragment {
         body_edit = (EditText) view.findViewById(R.id.body_edit);
         Button ok_btn = ok_btn = (Button) view.findViewById(R.id.ok_btn);
 
-        savedInstanceState=getArguments();
+        savedInstanceState = getArguments();
         title_edit.setText(savedInstanceState.getString("title", null));
         body_edit.setText(savedInstanceState.getString("body", null));
-        id=savedInstanceState.getString("id", null);
+        id = savedInstanceState.getString("id", null);
 
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,10 +67,12 @@ public class DetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.delete_itm:
-
-                getActivity().getContentResolver().delete(MyContentProvider.CONTENT_URI, MyDBHelper.COLUMN_ID+"="+id, null);
+                Uri uri= withAppendedPath(MyContentProvider.CONTENT_URI, id);
+                getActivity().getContentResolver().delete(uri, MyDBHelper.COLUMN_ID + "=" + id, null);
+                backToMain();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -72,7 +84,7 @@ public class DetailFragment extends Fragment {
         getActivity().getContentResolver().insert(MyContentProvider.CONTENT_URI, contentValues);
     }
 
-    private void backToMain(){
+    private void backToMain() {
         MainFragment fragment = new MainFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.addToBackStack(null)
