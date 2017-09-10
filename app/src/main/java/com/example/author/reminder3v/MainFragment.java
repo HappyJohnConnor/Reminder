@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +18,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class MainFragment extends Fragment {
 
-    public MainFragment() {}
+    public MainFragment() {
+    }
 
 
     @Override
@@ -30,7 +32,19 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListView listView=(ListView)view.findViewById(R.id.list_view);
+        ListView listView = (ListView) view.findViewById(R.id.list_view);
+
+        FloatingActionButton addBtn = (FloatingActionButton) view.findViewById(R.id.add_btn);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailFragment fragment = new DetailFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null).
+                        replace(R.id.main_fragment, fragment)
+                        .commit();
+            }
+        });
 
         //db
         MyDBHelper myDBHelper = new MyDBHelper(getActivity());
@@ -45,17 +59,18 @@ public class MainFragment extends Fragment {
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_item, cursor, from, to, 0);
         listView.setAdapter(adapter);
 
-        // TODO: 2017/08/31 fragmentに情報を受け渡す。
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String body= cursor.getString(cursor.getColumnIndex("body"));
+                String body = cursor.getString(cursor.getColumnIndex("body"));
 
                 DetailFragment fragment = new DetailFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                Bundle bundle=new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putString("title", cursor.getString(cursor.getColumnIndex("title")));
                 bundle.putString("body", cursor.getString(cursor.getColumnIndex("body")));
+                bundle.putString("id", cursor.getString(cursor.getColumnIndex("_id")));
                 fragment.setArguments(bundle);
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_fragment, fragment);
