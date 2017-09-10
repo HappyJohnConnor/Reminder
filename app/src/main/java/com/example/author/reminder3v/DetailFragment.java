@@ -59,6 +59,7 @@ public class DetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.delete_itm:
+
                 getActivity().getContentResolver().delete(MyContentProvider.CONTENT_URI, MyDBHelper.COLUMN_ID+"="+id, null);
         }
         return super.onOptionsItemSelected(item);

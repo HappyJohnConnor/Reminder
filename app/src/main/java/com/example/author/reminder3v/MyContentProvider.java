@@ -84,6 +84,7 @@ public class MyContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+
         return 0;
     }
 

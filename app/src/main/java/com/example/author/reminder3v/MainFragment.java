@@ -63,8 +63,6 @@ public class MainFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String body = cursor.getString(cursor.getColumnIndex("body"));
-
                 DetailFragment fragment = new DetailFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 Bundle bundle = new Bundle();
@@ -79,5 +77,6 @@ public class MainFragment extends Fragment {
             }
         });
     }
+
 }
 

@@ -5,7 +5,7 @@
     tools:context="com.example.author.reminder3v.MainActivity">
     <item
         android:id="@+id/delete_itm"
-        android:actionLayout="@android:drawable/ic_menu_delete"
-        app:showAsAction="ifRoom"
-        android:title="@string/delete_a_item" />
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/delete_a_item"
+        app:showAsAction="ifRoom" />
 </menu>
